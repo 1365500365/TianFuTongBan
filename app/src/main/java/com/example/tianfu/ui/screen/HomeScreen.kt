@@ -195,6 +195,7 @@ private fun ConvenienceServiceBanner() {
 
 @Composable
 private fun HotServicesSection() {
+    val navigator = currentComposeNavigator
     val services = remember { getMockHotServices() }
 
     Card(
@@ -214,11 +215,16 @@ private fun HotServicesSection() {
                     ) {
                         for (col in 0..3) {
                             val index = row * 4 + col
+                            val shot = services[index].shot
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .width(84.dp)
-                                    .clickable { }
+                                    .clickable {
+                                        if (shot != null) {
+                                            navigator.navigate(AppScreen.Screenshot(shot))
+                                        }
+                                    }
                                     .padding(vertical = 8.dp, horizontal = 2.dp)
                             ) {
                                 Image(
@@ -408,17 +414,18 @@ private data class LifecycleCategory(
 
 private data class HotService(
     val title: String,
-    @DrawableRes val iconRes: Int
+    @DrawableRes val iconRes: Int,
+    @DrawableRes val shot: Int? = null
 )
 
 private fun getMockHotServices() = listOf(
-    HotService("居民服务一件事", R.drawable.ic_home_jmfwyjs),
+    HotService("居民服务一件事", R.drawable.ic_home_jmfwyjs, R.drawable.sec_28),
     HotService("一码检合", R.drawable.ic_home_ymjc),
-    HotService("专项信用报告（有无违法违纪记录证明版）", R.drawable.ic_home_zxxybg),
-    HotService("市场主体登记注册", R.drawable.ic_home_scztdjzc),
-    HotService("成都市用水报装", R.drawable.ic_home_cdsysbz),
+    HotService("专项信用报告（有无违法违纪记录证明版）", R.drawable.ic_home_zxxybg, R.drawable.sec_29),
+    HotService("市场主体登记注册", R.drawable.ic_home_scztdjzc, R.drawable.sec_30),
+    HotService("成都市用水报装", R.drawable.ic_home_cdsysbz, R.drawable.sec_31),
     HotService("个人住房公积金贷存账户变动明细查询", R.drawable.ic_home_grzfgjj),
-    HotService("企业登记档案查询", R.drawable.ic_home_qydjdacx),
+    HotService("企业登记档案查询", R.drawable.ic_home_qydjdacx, R.drawable.sec_01),
     HotService("更多", R.drawable.ic_home_more)
 )
 
