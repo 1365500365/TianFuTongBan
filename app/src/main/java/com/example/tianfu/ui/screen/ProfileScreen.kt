@@ -244,8 +244,8 @@ private fun ProfileLoginCard(onLoginClick: () -> Unit, realName: String?) {
                 ProfileQuickLink("我的办件", R.drawable.ic_mine_wdbj) {
                     quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_banjian))
                 }
-                ProfileQuickLink("我的服务", R.drawable.ic_mine_wdrz) {
-                    quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_fuwu))
+                ProfileQuickLink("我的认证", R.drawable.ic_mine_wdrz) {
+                    quickNavigator.navigate(AppScreen.Empty)
                 }
                 ProfileQuickLink("我的材料", R.drawable.ic_mine_wdcl) {
                     quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_cailiao))
@@ -352,6 +352,7 @@ private fun ECertificateSection() {
  */
 @Composable
 private fun MySubscriptionSection(selectedTab: Int, onTabSelected: (Int) -> Unit) {
+    val navigator = currentComposeNavigator
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -395,12 +396,17 @@ private fun MySubscriptionSection(selectedTab: Int, onTabSelected: (Int) -> Unit
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 缺省空状态面板
+            // 缺省空状态面板：选中「服务」(tab 0)时点击跳「我的服务」截图
             Column(
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth()
-                    .background(Color(0xFFF8F9FA), shape = RoundedCornerShape(8.dp)),
+                    .background(Color(0xFFF8F9FA), shape = RoundedCornerShape(8.dp))
+                    .then(
+                        if (selectedTab == 0) Modifier.clickable {
+                            navigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_fuwu))
+                        } else Modifier
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
