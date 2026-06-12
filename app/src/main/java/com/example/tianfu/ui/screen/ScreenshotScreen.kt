@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -39,6 +40,9 @@ fun ScreenshotScreen(@DrawableRes imageRes: Int) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            // 让内容（含左上角返回热区）下移到系统状态栏之下，
+            // 否则裁掉状态栏后图片顶部的「返回」会被系统状态栏遮挡且热区不可点。
+            .statusBarsPadding()
     ) {
         // 截图原始宽度基准为 1080px，返回按钮约位于左上角 (0..210, 0..125) 区域。
         val backWidth = maxWidth * (210f / 1080f)
