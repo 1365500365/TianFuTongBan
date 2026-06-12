@@ -82,28 +82,39 @@ fun AffairsScreen() {
         "其他"
     )
 
-    // 部门数据（每行2个，未展开5行即5对）
+    // 部门数据（每行2个，平铺列表，奇数个时最后一格补空）
+    // 个人办事·部门分类共 27 个，顺序对应 banshi 截图 25–51
     val personalDepts = listOf(
-        "市发改委" to "市教育局",
-        "市科技局" to "市民宗局",
-        "市公安局" to "市民政局",
-        "市司法局" to "市财政局",
-        "市人社局" to "市住建局",
-        // 展开后显示的数据
-        "市医保局" to "市商务局",
-        "市生态环境局" to "市运输局",
-        "市文广旅局" to "市卫健委"
+        "市发改委", "市教育局", "市科技局", "市民宗局", "市公安局",
+        "市民政局", "市司法局", "市财政局", "市人社局", "市住建局",
+        "市城管委", "市交通运输局", "市水务局", "市农业农村局", "市商务局",
+        "市文广旅局", "市卫健委", "市市场监管局", "市体育局", "市人防办",
+        "市公园城市局", "市新闻出版局", "市规划和自然资源局", "市政府侨办", "市气象局",
+        "市经信局", "市消防救援支队"
     )
     val corporateDepts = listOf(
-        "市发改委" to "市教育局",
-        "市科技局" to "市民宗局",
-        "市公安局" to "市民政局",
-        "市司法局" to "市住建局",
-        "市人社局" to "市商务局",
-        // 展开后显示的数据
-        "市财政局" to "市工商局",
-        "市质监局" to "市安监局",
-        "市税务局" to "市经信局"
+        "市发改委", "市教育局", "市科技局", "市民宗局", "市公安局", "市民政局",
+        "市司法局", "市住建局", "市人社局", "市商务局", "市财政局", "市工商局",
+        "市质监局", "市安监局", "市税务局", "市经信局"
+    )
+
+    // 截图映射：仅个人办事接线。主题(24)→banshi_01..24，部门(27)→banshi_25..51
+    val personalThemeShots = listOf(
+        R.drawable.banshi_01, R.drawable.banshi_02, R.drawable.banshi_03, R.drawable.banshi_04,
+        R.drawable.banshi_05, R.drawable.banshi_06, R.drawable.banshi_07, R.drawable.banshi_08,
+        R.drawable.banshi_09, R.drawable.banshi_10, R.drawable.banshi_11, R.drawable.banshi_12,
+        R.drawable.banshi_13, R.drawable.banshi_14, R.drawable.banshi_15, R.drawable.banshi_16,
+        R.drawable.banshi_17, R.drawable.banshi_18, R.drawable.banshi_19, R.drawable.banshi_20,
+        R.drawable.banshi_21, R.drawable.banshi_22, R.drawable.banshi_23, R.drawable.banshi_24
+    )
+    val personalDeptShots = listOf(
+        R.drawable.banshi_25, R.drawable.banshi_26, R.drawable.banshi_27, R.drawable.banshi_28,
+        R.drawable.banshi_29, R.drawable.banshi_30, R.drawable.banshi_31, R.drawable.banshi_32,
+        R.drawable.banshi_33, R.drawable.banshi_34, R.drawable.banshi_35, R.drawable.banshi_36,
+        R.drawable.banshi_37, R.drawable.banshi_38, R.drawable.banshi_39, R.drawable.banshi_40,
+        R.drawable.banshi_41, R.drawable.banshi_42, R.drawable.banshi_43, R.drawable.banshi_44,
+        R.drawable.banshi_45, R.drawable.banshi_46, R.drawable.banshi_47, R.drawable.banshi_48,
+        R.drawable.banshi_49, R.drawable.banshi_50, R.drawable.banshi_51
     )
 
     Column(
@@ -210,22 +221,24 @@ fun AffairsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 val themes = if (selectedTab.intValue == 0) personalThemes else corporateThemes
+                val themeShots = if (selectedTab.intValue == 0) personalThemeShots else emptyList()
                 // 🛠️ 优化点：未展开状态展示 3 行（每行3个，所以 take 9 个）
                 val displayThemes = if (showMoreThemes.value) themes else themes.take(9)
 
                 val chunkedThemes = displayThemes.chunked(3)
-                chunkedThemes.forEach { rowThemes ->
+                chunkedThemes.forEachIndexed { rowIndex, rowThemes ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
-                        rowThemes.forEach { theme ->
+                        rowThemes.forEachIndexed { colIndex, theme ->
+                            val shot = themeShots.getOrNull(rowIndex * 3 + colIndex)
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(color = Color(0xFFF4F9FC))
-                                    .clickable { }
+                                    .clickable { shot?.let { navigator.navigate(AppScreen.Screenshot(it)) } }
                                     .padding(vertical = 12.dp),
                                 contentAlignment = Alignment.Center
                             ) {
@@ -287,18 +300,29 @@ fun AffairsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 val departments = if (selectedTab.intValue == 0) personalDepts else corporateDepts
-                // 🛠️ 优化点：未展开状态展示 5 行（每行2个，每对代表1行，所以 take(5) 组数据）
-                val displayDepts = if (showMoreDepts.value) departments else departments.take(5)
+                val deptShots = if (selectedTab.intValue == 0) personalDeptShots else emptyList()
+                val chunkedDepts = departments.chunked(2)
+                // 🛠️ 优化点：未展开状态展示 5 行（每行2个）
+                val displayDepts = if (showMoreDepts.value) chunkedDepts else chunkedDepts.take(5)
 
-                displayDepts.forEach { (left, right) ->
+                displayDepts.forEachIndexed { rowIndex, rowDepts ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 5.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        DepartmentItem(left, Modifier.weight(1f))
-                        DepartmentItem(right, Modifier.weight(1f))
+                        rowDepts.forEachIndexed { colIndex, dept ->
+                            val shot = deptShots.getOrNull(rowIndex * 2 + colIndex)
+                            DepartmentItem(
+                                name = dept,
+                                modifier = Modifier.weight(1f),
+                                onClick = { shot?.let { navigator.navigate(AppScreen.Screenshot(it)) } }
+                            )
+                        }
+                        if (rowDepts.size < 2) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
 
@@ -398,10 +422,10 @@ private fun AffairsBanner() {
 }
 
 @Composable
-private fun DepartmentItem(name: String, modifier: Modifier = Modifier) {
+private fun DepartmentItem(name: String, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
     Card(
         modifier = modifier
-            .clickable { },
+            .clickable { onClick() },
         shape = RoundedCornerShape(3.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF4F9FC)),
     ) {
