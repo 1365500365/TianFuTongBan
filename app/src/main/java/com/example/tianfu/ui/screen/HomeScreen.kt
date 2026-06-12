@@ -256,14 +256,16 @@ private fun HotServicesSection(onMoreClick: () -> Unit = {}) {
 
 @Composable
 private fun FeaturedThemesSection() {
+    val navigator = currentComposeNavigator
+    // 精选主题入口图 ↔ 对应二级截图（jingxuan_01..06，顺序一一对应）
     val themeImages = remember {
         listOf(
-            R.drawable.home_image_1,
-            R.drawable.home_image_2,
-            R.drawable.home_image_3,
-            R.drawable.home_image_4,
-            R.drawable.home_image_5,
-            R.drawable.home_image_6,
+            R.drawable.home_image_1 to R.drawable.jingxuan_01,
+            R.drawable.home_image_2 to R.drawable.jingxuan_02,
+            R.drawable.home_image_3 to R.drawable.jingxuan_03,
+            R.drawable.home_image_4 to R.drawable.jingxuan_04,
+            R.drawable.home_image_5 to R.drawable.jingxuan_05,
+            R.drawable.home_image_6 to R.drawable.jingxuan_06,
         )
     }
 
@@ -283,14 +285,14 @@ private fun FeaturedThemesSection() {
                     .padding(horizontal = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                themeImages.forEach { imgRes ->
+                themeImages.forEach { (imgRes, shotRes) ->
                     Image(
                         painter = painterResource(id = imgRes),
                         contentDescription = null,
                         modifier = Modifier
                             .width(100.dp)
                             .clickable {
-
+                                navigator.navigate(AppScreen.Screenshot(shotRes))
                             },
                         contentScale = ContentScale.FillWidth
                     )
