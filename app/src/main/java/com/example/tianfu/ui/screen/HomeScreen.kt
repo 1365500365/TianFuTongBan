@@ -54,7 +54,7 @@ import com.example.tianfu.ui.component.SectionHeader
 
 @Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onNavigateToConvenience: () -> Unit = {}) {
     val navigator = currentComposeNavigator
     val region = RegionStore.currentRegion
 
@@ -86,7 +86,7 @@ fun HomeScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
                 ConvenienceServiceBanner()
                 Spacer(modifier = Modifier.height(12.dp))
-                HotServicesSection()
+                HotServicesSection(onMoreClick = onNavigateToConvenience)
                 Spacer(modifier = Modifier.height(12.dp))
                 FeaturedThemesSection()
                 Spacer(modifier = Modifier.height(12.dp))
@@ -194,7 +194,7 @@ private fun ConvenienceServiceBanner() {
 }
 
 @Composable
-private fun HotServicesSection() {
+private fun HotServicesSection(onMoreClick: () -> Unit = {}) {
     val navigator = currentComposeNavigator
     val services = remember { getMockHotServices() }
 
@@ -221,8 +221,9 @@ private fun HotServicesSection() {
                                 modifier = Modifier
                                     .width(84.dp)
                                     .clickable {
-                                        if (shot != null) {
-                                            navigator.navigate(AppScreen.Screenshot(shot))
+                                        when {
+                                            services[index].title == "更多" -> onMoreClick()
+                                            shot != null -> navigator.navigate(AppScreen.Screenshot(shot))
                                         }
                                     }
                                     .padding(vertical = 8.dp, horizontal = 2.dp)

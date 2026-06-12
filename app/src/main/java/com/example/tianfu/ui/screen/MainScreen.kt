@@ -33,7 +33,7 @@ fun MainScreen(
             selectedIcon = R.drawable.home_tab_select,
             unselectedIcon = R.drawable.home_tab_unselect,
             content = {
-                HomeScreen()
+                HomeScreen(onNavigateToConvenience = { selectedIndex = 1 })
             }
         ),
         BottomTabItem(

@@ -71,6 +71,7 @@ fun AffairsScreen() {
         "准营准办", "死亡殡葬", "知识产权",
         "教育科研", "户籍办理", "其他"
     )
+    // 法人办事·主题分类共 31 个，顺序对应 faren 截图 01–31
     val corporateThemes = listOf(
         "法人注销", "资质认证", "交通运输",
         "文体教育", "抵押质押", "涉外服务",
@@ -78,7 +79,10 @@ fun AffairsScreen() {
         "档案文物", "司法公证", "年检年审",
         "医疗卫生", "水务气象", "准营准办",
         "质量技术", "投资审批", "民族宗教",
-        "科技创新", "招标拍卖", "公安消防",
+        "科技创新", "招标拍卖", "检验检疫",
+        "设立变更", "社会保障", "公安消防",
+        "知识产权", "环保绿化", "安全生产",
+        "海关口岸", "应对气候变化", "公用事业",
         "其他"
     )
 
@@ -92,10 +96,15 @@ fun AffairsScreen() {
         "市公园城市局", "市新闻出版局", "市规划和自然资源局", "市政府侨办", "市气象局",
         "市经信局", "市消防救援支队"
     )
+    // 法人办事·部门分类共 31 个，顺序对应 faren 截图 32–62
     val corporateDepts = listOf(
-        "市发改委", "市教育局", "市科技局", "市民宗局", "市公安局", "市民政局",
-        "市司法局", "市住建局", "市人社局", "市商务局", "市财政局", "市工商局",
-        "市质监局", "市安监局", "市税务局", "市经信局"
+        "市发改委", "市教育局", "市科技局", "市民宗局", "市公安局",
+        "市民政局", "市司法局", "市财政局", "市人社局", "市生态环境局",
+        "市住建局", "市城管委", "市交通运输局", "市水务局", "市农业农村局",
+        "市商务局", "市文广旅局", "市卫健委", "市应急局", "市市场监管局",
+        "市体育局", "市人防办", "市金融监管局", "市公园城市局", "市新闻出版局",
+        "市经信局", "市档案局", "市规划和自然资源局", "市消防救援支队", "市气象局",
+        "成都邮政管理局"
     )
 
     // 截图映射：仅个人办事接线。主题(24)→banshi_01..24，部门(27)→banshi_25..51
@@ -115,6 +124,28 @@ fun AffairsScreen() {
         R.drawable.banshi_41, R.drawable.banshi_42, R.drawable.banshi_43, R.drawable.banshi_44,
         R.drawable.banshi_45, R.drawable.banshi_46, R.drawable.banshi_47, R.drawable.banshi_48,
         R.drawable.banshi_49, R.drawable.banshi_50, R.drawable.banshi_51
+    )
+
+    // 截图映射：法人办事。主题(31)→faren_01..31，部门(31)→faren_32..62
+    val corporateThemeShots = listOf(
+        R.drawable.faren_01, R.drawable.faren_02, R.drawable.faren_03, R.drawable.faren_04,
+        R.drawable.faren_05, R.drawable.faren_06, R.drawable.faren_07, R.drawable.faren_08,
+        R.drawable.faren_09, R.drawable.faren_10, R.drawable.faren_11, R.drawable.faren_12,
+        R.drawable.faren_13, R.drawable.faren_14, R.drawable.faren_15, R.drawable.faren_16,
+        R.drawable.faren_17, R.drawable.faren_18, R.drawable.faren_19, R.drawable.faren_20,
+        R.drawable.faren_21, R.drawable.faren_22, R.drawable.faren_23, R.drawable.faren_24,
+        R.drawable.faren_25, R.drawable.faren_26, R.drawable.faren_27, R.drawable.faren_28,
+        R.drawable.faren_29, R.drawable.faren_30, R.drawable.faren_31
+    )
+    val corporateDeptShots = listOf(
+        R.drawable.faren_32, R.drawable.faren_33, R.drawable.faren_34, R.drawable.faren_35,
+        R.drawable.faren_36, R.drawable.faren_37, R.drawable.faren_38, R.drawable.faren_39,
+        R.drawable.faren_40, R.drawable.faren_41, R.drawable.faren_42, R.drawable.faren_43,
+        R.drawable.faren_44, R.drawable.faren_45, R.drawable.faren_46, R.drawable.faren_47,
+        R.drawable.faren_48, R.drawable.faren_49, R.drawable.faren_50, R.drawable.faren_51,
+        R.drawable.faren_52, R.drawable.faren_53, R.drawable.faren_54, R.drawable.faren_55,
+        R.drawable.faren_56, R.drawable.faren_57, R.drawable.faren_58, R.drawable.faren_59,
+        R.drawable.faren_60, R.drawable.faren_61, R.drawable.faren_62
     )
 
     Column(
@@ -221,7 +252,7 @@ fun AffairsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 val themes = if (selectedTab.intValue == 0) personalThemes else corporateThemes
-                val themeShots = if (selectedTab.intValue == 0) personalThemeShots else emptyList()
+                val themeShots = if (selectedTab.intValue == 0) personalThemeShots else corporateThemeShots
                 // 🛠️ 优化点：未展开状态展示 3 行（每行3个，所以 take 9 个）
                 val displayThemes = if (showMoreThemes.value) themes else themes.take(9)
 
@@ -300,7 +331,7 @@ fun AffairsScreen() {
                 Spacer(modifier = Modifier.height(12.dp))
 
                 val departments = if (selectedTab.intValue == 0) personalDepts else corporateDepts
-                val deptShots = if (selectedTab.intValue == 0) personalDeptShots else emptyList()
+                val deptShots = if (selectedTab.intValue == 0) personalDeptShots else corporateDeptShots
                 val chunkedDepts = departments.chunked(2)
                 // 🛠️ 优化点：未展开状态展示 5 行（每行2个）
                 val displayDepts = if (showMoreDepts.value) chunkedDepts else chunkedDepts.take(5)
