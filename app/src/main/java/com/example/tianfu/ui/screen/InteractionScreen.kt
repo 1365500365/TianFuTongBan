@@ -46,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tianfu.R
+import com.example.tianfu.config.AppScreen
+import com.example.tianfu.navigation.currentComposeNavigator
 import com.example.tianfu.theme.BackgroundGray
 import com.example.tianfu.theme.PrimaryBlue
 import com.example.tianfu.theme.TextSecondary
@@ -249,10 +251,19 @@ private fun QuickActionSection() {
                 .padding(vertical = 8.dp, horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ActionButton("常见问题", R.drawable.ic_interaction_cjwt)
-            ActionButton("我要投诉", R.drawable.ic_interaction_wyts)
-            ActionButton("我要建议", R.drawable.ic_interaction_wyjy)
-            ActionButton("我要咨询", R.drawable.ic_interaction_wyzx)
+            val navigator = currentComposeNavigator
+            ActionButton("常见问题", R.drawable.ic_interaction_cjwt) {
+                navigator.navigate(AppScreen.Screenshot(R.drawable.page_hudong_cjwt))
+            }
+            ActionButton("我要投诉", R.drawable.ic_interaction_wyts) {
+                navigator.navigate(AppScreen.Empty)
+            }
+            ActionButton("我要建议", R.drawable.ic_interaction_wyjy) {
+                navigator.navigate(AppScreen.Empty)
+            }
+            ActionButton("我要咨询", R.drawable.ic_interaction_wyzx) {
+                navigator.navigate(AppScreen.Empty)
+            }
         }
     }
 }
@@ -402,10 +413,10 @@ private fun VerticalDividerLine() {
 }
 
 @Composable
-private fun ActionButton(title: String, iconResId: Int) {
+private fun ActionButton(title: String, iconResId: Int, onClick: () -> Unit = {}) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { }
+        modifier = Modifier.clickable { onClick() }
     ) {
         Box(
             contentAlignment = Alignment.Center

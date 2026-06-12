@@ -224,6 +224,7 @@ private fun HotServicesSection(onMoreClick: () -> Unit = {}) {
                                         when {
                                             services[index].title == "更多" -> onMoreClick()
                                             shot != null -> navigator.navigate(AppScreen.Screenshot(shot))
+                                            else -> navigator.navigate(AppScreen.Empty)
                                         }
                                     }
                                     .padding(vertical = 8.dp, horizontal = 2.dp)

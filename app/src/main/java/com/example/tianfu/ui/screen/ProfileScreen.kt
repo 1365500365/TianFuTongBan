@@ -240,9 +240,16 @@ private fun ProfileLoginCard(onLoginClick: () -> Unit, realName: String?) {
                     .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                ProfileQuickLink("我的办件", R.drawable.ic_mine_wdbj)
-                ProfileQuickLink("我的认证", R.drawable.ic_mine_wdrz)
-                ProfileQuickLink("我的材料", R.drawable.ic_mine_wdcl)
+                val quickNavigator = currentComposeNavigator
+                ProfileQuickLink("我的办件", R.drawable.ic_mine_wdbj) {
+                    quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_banjian))
+                }
+                ProfileQuickLink("我的服务", R.drawable.ic_mine_wdrz) {
+                    quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_fuwu))
+                }
+                ProfileQuickLink("我的材料", R.drawable.ic_mine_wdcl) {
+                    quickNavigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_cailiao))
+                }
             }
         }
     }
@@ -252,11 +259,11 @@ private fun ProfileLoginCard(onLoginClick: () -> Unit, realName: String?) {
  * 2.1 快捷链接子项组件
  */
 @Composable
-private fun ProfileQuickLink(title: String, iconResId: Int) {
+private fun ProfileQuickLink(title: String, iconResId: Int, onClick: () -> Unit = {}) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clickable { }
+            .clickable { onClick() }
     ) {
         Image(
             painter = painterResource(id = iconResId),
