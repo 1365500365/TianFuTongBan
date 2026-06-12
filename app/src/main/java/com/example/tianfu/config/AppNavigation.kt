@@ -2,9 +2,11 @@ package com.example.tianfu.config
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.tianfu.ui.screen.EmptyPage
 import com.example.tianfu.ui.screen.LaunchScreen
 import com.example.tianfu.ui.screen.MainScreen
+import com.example.tianfu.ui.screen.ScreenshotScreen
 import com.example.tianfu.ui.screen.SettingScreen
 import com.example.tianfu.screens.LoginScreen
 import com.example.tianfu.ui.screen.PropertyInfoScreen
@@ -59,5 +61,11 @@ fun NavGraphBuilder.appNavigation() {
     // 空页面
     composable<AppScreen.Empty> {
         EmptyPage()
+    }
+
+    // 通用二级截图页
+    composable<AppScreen.Screenshot> { backStackEntry ->
+        val args = backStackEntry.toRoute<AppScreen.Screenshot>()
+        ScreenshotScreen(imageRes = args.imageRes)
     }
 }

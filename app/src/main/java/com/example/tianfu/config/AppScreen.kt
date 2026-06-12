@@ -58,4 +58,11 @@ sealed interface AppScreen {
      */
     @Serializable
     data class Detail(val itemId: Int) : AppScreen
+
+    /**
+     * 通用二级截图页 —— 仅展示一张截图（首页/便民入口的跳转目标）
+     * @param imageRes 要展示的截图 drawable 资源 id
+     */
+    @Serializable
+    data class Screenshot(val imageRes: Int) : AppScreen
 }

@@ -1,5 +1,6 @@
 package com.example.tianfu.ui.screen
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tianfu.R
 import com.example.tianfu.config.AppScreen
 import com.example.tianfu.config.AppStoreKeys
 import com.example.tianfu.config.RegionStore
@@ -46,7 +48,9 @@ import com.example.tianfu.utils.DataStoreManager
 import kotlinx.coroutines.launch
 
 // 数据结构精简：每个分类就是一个对象
-data class ConvenienceSection(val categoryName: String, val items: List<String>)
+// shot 为该入口对应的二级页面截图资源；为 null 表示暂无截图
+data class ConvenienceItem(val title: String, @DrawableRes val shot: Int? = null)
+data class ConvenienceSection(val categoryName: String, val items: List<ConvenienceItem>)
 
 @Preview
 @Composable
@@ -113,17 +117,19 @@ fun ConvenienceScreen() {
                     ServiceSectionCard(
                         title = section.categoryName,
                         items = section.items,
-                        onItemClick = { title ->
+                        onItemClick = { item ->
                             // 处理点击事件
-                            if (title == "房产信息查询") {
-                                val isLoggedIn = DataStoreManager.get(AppStoreKeys.IsLoggedIn)
-                                if (isLoggedIn) {
-                                    navigator.navigate(AppScreen.PropertyInfo)
-                                } else {
-                                    navigator.navigate(AppScreen.Login)
+                            when {
+                                item.title == "房产信息查询" -> {
+                                    val isLoggedIn = DataStoreManager.get(AppStoreKeys.IsLoggedIn)
+                                    if (isLoggedIn) {
+                                        navigator.navigate(AppScreen.PropertyInfo)
+                                    } else {
+                                        navigator.navigate(AppScreen.Login)
+                                    }
                                 }
-                            } else {
-                                navigator.navigate(AppScreen.Empty)
+                                item.shot != null -> navigator.navigate(AppScreen.Screenshot(item.shot))
+                                else -> navigator.navigate(AppScreen.Empty)
                             }
                         }
                     )
@@ -178,7 +184,7 @@ private fun ConvenienceTabChips(
 }
 
 @Composable
-private fun ServiceSectionCard(title: String, items: List<String>, onItemClick: (String) -> Unit) {
+private fun ServiceSectionCard(title: String, items: List<ConvenienceItem>, onItemClick: (ConvenienceItem) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -227,7 +233,7 @@ private fun ServiceSectionCard(title: String, items: List<String>, onItemClick: 
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = item,
+                            text = item.title,
                             fontSize = 13.sp,
                             color = Color(0xFF333333),
                             textAlign = TextAlign.Center,
@@ -250,52 +256,52 @@ private fun ServiceSectionCard(title: String, items: List<String>, onItemClick: 
 private fun getRealConvenienceData(): List<ConvenienceSection> {
     return listOf(
         ConvenienceSection("社会保障", listOf(
-            "养老机构设立备案", "社保缴费（含少儿互助金）"
+            ConvenienceItem("养老机构设立备案", R.drawable.sec_02), ConvenienceItem("社保缴费（含少儿互助金）")
         )),
         ConvenienceSection("房管服务", listOf(
-            "商品房预售许可进度查询", "公租房租金缴纳",
-            "国有土地房屋拆迁备案查询", "房产信息查询"
+            ConvenienceItem("商品房预售许可进度查询", R.drawable.sec_03), ConvenienceItem("公租房租金缴纳"),
+            ConvenienceItem("国有土地房屋拆迁备案查询"), ConvenienceItem("房产信息查询")
         )),
         ConvenienceSection("不动产登记", listOf(
-            "不动产登记-电子证明核验", "不动产登记-电子票据",
-            "不动产登记-房地产数据关联"
+            ConvenienceItem("不动产登记-电子证明核验", R.drawable.sec_04), ConvenienceItem("不动产登记-电子票据", R.drawable.sec_05),
+            ConvenienceItem("不动产登记-房地产数据关联", R.drawable.sec_06)
         )),
         ConvenienceSection("公积金", listOf(
-            "个人住房公积金缴存账户变动明细查询", "合作楼盘查询",
-            "个人住房公积金缴存明细查询", "贷款试算表（个人缴存证明打印）"
+            ConvenienceItem("个人住房公积金缴存账户变动明细查询"), ConvenienceItem("合作楼盘查询", R.drawable.sec_07),
+            ConvenienceItem("个人住房公积金缴存明细查询"), ConvenienceItem("贷款试算表（个人缴存证明打印）")
         )),
         ConvenienceSection("交通出行", listOf(
-            "天府畅行", "交通运输行政处罚查询",
-            "营运车辆检测机构查询", "营运车辆检测记录查询"
+            ConvenienceItem("天府畅行"), ConvenienceItem("交通运输行政处罚查询", R.drawable.sec_08),
+            ConvenienceItem("营运车辆检测机构查询", R.drawable.sec_10), ConvenienceItem("营运车辆检测记录查询", R.drawable.sec_11)
         )),
         ConvenienceSection("户政治安", listOf(
-            "举办攀登山峰活动审批", "临时占用公共体育场（馆）设施审批（..."
+            ConvenienceItem("举办攀登山峰活动审批"), ConvenienceItem("临时占用公共体育场（馆）设施审批（...", R.drawable.sec_12)
         )),
         ConvenienceSection("生活服务", listOf(
-            "自来水缴费网点查询", "我要通气"
+            ConvenienceItem("自来水缴费网点查询", R.drawable.sec_13), ConvenienceItem("我要通气", R.drawable.sec_14)
         )),
         ConvenienceSection("贷款融资", listOf(
-            "农贷通", "成都市中小企业服务中心"
+            ConvenienceItem("农贷通", R.drawable.sec_15), ConvenienceItem("成都市中小企业服务中心", R.drawable.sec_16)
         )),
         ConvenienceSection("法律援助", listOf(
-            "法律援助智能咨询", "法律援助机构查询"
+            ConvenienceItem("法律援助智能咨询", R.drawable.sec_17), ConvenienceItem("法律援助机构查询", R.drawable.sec_18)
         )),
         ConvenienceSection("教育培训", listOf(
-            "进城务工人员随迁子女接受义务教育入学申..."
+            ConvenienceItem("进城务工人员随迁子女接受义务教育入学申...", R.drawable.sec_19)
         )),
         ConvenienceSection("农业牧渔", listOf(
-            "新建或迁建农村机电提灌站审批", "政府投资或补助的农村能源工程初步设计方...",
-            "农村机电提灌站产权登记"
+            ConvenienceItem("新建或迁建农村机电提灌站审批", R.drawable.sec_20), ConvenienceItem("政府投资或补助的农村能源工程初步设计方...", R.drawable.sec_21),
+            ConvenienceItem("农村机电提灌站产权登记", R.drawable.sec_22)
         )),
         ConvenienceSection("职业资格", listOf(
-            "二级社会体育指导员技术等级称号认定", "二级运动员称号授予"
+            ConvenienceItem("二级社会体育指导员技术等级称号认定", R.drawable.sec_23), ConvenienceItem("二级运动员称号授予", R.drawable.sec_24)
         )),
         ConvenienceSection("其他服务", listOf(
-            "城镇污水排入排水管网许可", "文旅类社会团体成立登记前审查"
+            ConvenienceItem("城镇污水排入排水管网许可", R.drawable.sec_25), ConvenienceItem("文旅类社会团体成立登记前审查", R.drawable.sec_26)
         )),
         ConvenienceSection("司法服务", listOf(
-            "公证机构查询", "城市房屋所有权委托公证业务申办",
-            "法定代表人权利委托公证业务申办", "机动车驾驶证公证业务申办"
+            ConvenienceItem("公证机构查询", R.drawable.sec_27), ConvenienceItem("城市房屋所有权委托公证业务申办"),
+            ConvenienceItem("法定代表人权利委托公证业务申办"), ConvenienceItem("机动车驾驶证公证业务申办")
         ))
     )
 }
