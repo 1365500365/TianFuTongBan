@@ -1,5 +1,6 @@
 package com.example.tianfu.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -34,12 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tianfu.R
 import com.example.tianfu.navigation.currentComposeNavigator
 import com.example.tianfu.theme.PrimaryBlue
 
@@ -54,11 +60,22 @@ import com.example.tianfu.theme.PrimaryBlue
 @Composable
 fun SearchScreen() {
     val navigator = currentComposeNavigator
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     var query by remember { mutableStateOf("") }
     var isFocused by remember { mutableStateOf(false) }
+    // 是否已发起过搜索（决定展示「热门搜索」还是搜索结果）
+    var hasSearched by remember { mutableStateOf(false) }
 
     val hotKeywords = listOf("社保", "医保")
+
+    fun submitSearch(keyword: String) {
+        query = keyword
+        if (keyword.isNotBlank()) {
+            hasSearched = true
+            keyboardController?.hide()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -134,16 +151,19 @@ fun SearchScreen() {
                 Box(modifier = Modifier.weight(1f)) {
                     BasicTextField(
                         value = query,
-                        onValueChange = { query = it },
+                        onValueChange = {
+                            query = it
+                            // 重新编辑时回到「热门搜索」视图
+                            hasSearched = false
+                        },
                         singleLine = true,
                         textStyle = TextStyle(
                             color = Color(0xFF1A1A1A),
                             fontSize = 14.sp
                         ),
                         cursorBrush = androidx.compose.ui.graphics.SolidColor(PrimaryBlue),
-                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
-                            imeAction = ImeAction.Search
-                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                        keyboardActions = KeyboardActions(onSearch = { submitSearch(query) }),
                         modifier = Modifier
                             .fillMaxWidth()
                             .onFocusChanged { isFocused = it.isFocused }
@@ -190,39 +210,66 @@ fun SearchScreen() {
             )
         }
 
-        // 热门搜索
-        Text(
-            text = "热门搜索",
-            color = Color(0xFF1A1A1A),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 12.dp)
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            hotKeywords.forEach { keyword ->
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(Color(0xFFF4F4F4))
-                        .clickable { query = keyword }
-                        .padding(horizontal = 16.dp, vertical = 7.dp)
+        if (hasSearched && query.isNotBlank()) {
+            // 搜索结果：暂无匹配内容时展示缺省空态
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(
+                    modifier = Modifier.padding(top = 120.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.img_empty),
+                        contentDescription = null,
+                        modifier = Modifier.size(140.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = keyword,
-                        color = Color(0xFF333333),
-                        fontSize = 14.sp
+                        text = "暂无内容",
+                        color = Color(0xFFB0B0B0),
+                        fontSize = 15.sp
                     )
                 }
             }
-        }
+        } else {
+            // 热门搜索
+            Text(
+                text = "热门搜索",
+                color = Color(0xFF1A1A1A),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 12.dp)
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        HorizontalDivider(thickness = 0.5.dp, color = Color(0xFFEDEDED))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                hotKeywords.forEach { keyword ->
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(Color(0xFFF4F4F4))
+                            .clickable { submitSearch(keyword) }
+                            .padding(horizontal = 16.dp, vertical = 7.dp)
+                    ) {
+                        Text(
+                            text = keyword,
+                            color = Color(0xFF333333),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(thickness = 0.5.dp, color = Color(0xFFEDEDED))
+        }
     }
 }
