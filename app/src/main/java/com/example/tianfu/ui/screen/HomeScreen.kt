@@ -103,6 +103,7 @@ fun HomeScreen(onNavigateToConvenience: () -> Unit = {}) {
 @Preview
 @Composable
 private fun QuickActionSection() {
+    val navigator = currentComposeNavigator
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
@@ -114,22 +115,19 @@ private fun QuickActionSection() {
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            QuickActionItem("预约", R.drawable.ic_home_yy)
-            QuickActionItem("办事", R.drawable.ic_home_bs)
-            QuickActionItem("办件", R.drawable.ic_home_bj)
-            QuickActionItem("关怀", R.drawable.ic_home_gh)
+            QuickActionItem("预约", R.drawable.ic_home_yy) { navigator.navigate(AppScreen.Empty) }
+            QuickActionItem("办事", R.drawable.ic_home_bs) { navigator.navigate(AppScreen.Screenshot(R.drawable.page_home_banshi)) }
+            QuickActionItem("办件", R.drawable.ic_home_bj) { navigator.navigate(AppScreen.Screenshot(R.drawable.page_home_banjian)) }
+            QuickActionItem("关怀", R.drawable.ic_home_gh) { navigator.navigate(AppScreen.Screenshot(R.drawable.page_home_guanhuai)) }
         }
     }
 }
 
 @Composable
-private fun QuickActionItem(title: String, @DrawableRes iconRes: Int) {
-    val navigator = currentComposeNavigator
+private fun QuickActionItem(title: String, @DrawableRes iconRes: Int, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable {
-            navigator.navigate(AppScreen.Empty)
-        }
+        modifier = Modifier.clickable { onClick() }
     ) {
         Image(
             painter = painterResource(id = iconRes),
