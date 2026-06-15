@@ -39,6 +39,12 @@ sealed interface AppScreen {
     @Serializable
     data object Empty : AppScreen
 
+    /**
+     * 搜索页
+     */
+    @Serializable
+    data object Search : AppScreen
+
     @Serializable
     data object PropertyInfo : AppScreen
 

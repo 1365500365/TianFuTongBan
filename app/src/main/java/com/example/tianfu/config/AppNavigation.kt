@@ -7,6 +7,7 @@ import com.example.tianfu.ui.screen.EmptyPage
 import com.example.tianfu.ui.screen.LaunchScreen
 import com.example.tianfu.ui.screen.MainScreen
 import com.example.tianfu.ui.screen.ScreenshotScreen
+import com.example.tianfu.ui.screen.SearchScreen
 import com.example.tianfu.ui.screen.SettingScreen
 import com.example.tianfu.screens.LoginScreen
 import com.example.tianfu.ui.screen.PropertyInfoScreen
@@ -61,6 +62,11 @@ fun NavGraphBuilder.appNavigation() {
     // 空页面
     composable<AppScreen.Empty> {
         EmptyPage()
+    }
+
+    // 搜索页
+    composable<AppScreen.Search> {
+        SearchScreen()
     }
 
     // 通用二级截图页

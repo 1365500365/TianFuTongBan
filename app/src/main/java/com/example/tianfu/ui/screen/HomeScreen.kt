@@ -72,7 +72,8 @@ fun HomeScreen(onNavigateToConvenience: () -> Unit = {}) {
                 ScreenTopBackground()
                 ScreenTopSearchBar(
                     locationText = region.displayText,
-                    onLocationClick = { navigator.navigate(AppScreen.RegionPicker) }
+                    onLocationClick = { navigator.navigate(AppScreen.RegionPicker) },
+                    onSearchClick = { navigator.navigate(AppScreen.Search) }
                 )
             }
 
