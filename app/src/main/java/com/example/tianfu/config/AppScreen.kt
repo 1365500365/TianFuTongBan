@@ -45,6 +45,12 @@ sealed interface AppScreen {
     @Serializable
     data object Search : AppScreen
 
+    /**
+     * 扫一扫（相机扫码）
+     */
+    @Serializable
+    data object Scan : AppScreen
+
     @Serializable
     data object PropertyInfo : AppScreen
 

@@ -81,6 +81,13 @@ dependencies {
     // 图片加载
     implementation(libs.androidx.coil.compose)
 
+    // 扫码：CameraX 预览 + ML Kit 条码识别
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.mlkit.barcode.scanning)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

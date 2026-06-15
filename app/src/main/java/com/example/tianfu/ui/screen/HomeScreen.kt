@@ -73,7 +73,9 @@ fun HomeScreen(onNavigateToConvenience: () -> Unit = {}) {
                 ScreenTopSearchBar(
                     locationText = region.displayText,
                     onLocationClick = { navigator.navigate(AppScreen.RegionPicker) },
-                    onSearchClick = { navigator.navigate(AppScreen.Search) }
+                    onSearchClick = { navigator.navigate(AppScreen.Search) },
+                    onScanClick = { navigator.navigate(AppScreen.Scan) },
+                    onNotificationClick = { navigator.navigate(AppScreen.Screenshot(R.drawable.page_wode_xiaoxi)) }
                 )
             }
 

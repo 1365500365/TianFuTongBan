@@ -9,8 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- TODO: 根据项目需求添加额外权限，如相机、存储等 -->
-    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- 扫码功能：相机 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
 
     <application
         android:name="com.example.tianfu.ComposeApp"
