@@ -63,6 +63,7 @@ import java.util.concurrent.Executors
  * - 首次进入请求系统相机权限；「相册」可从图库选图识别。
  * - 识别到结果后弹框展示，点「确定」继续扫描。
  */
+@androidx.annotation.OptIn(ExperimentalGetImage::class)
 @OptIn(ExperimentalGetImage::class)
 @Composable
 fun ScanScreen() {
